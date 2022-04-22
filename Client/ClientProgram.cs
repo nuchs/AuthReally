@@ -4,7 +4,7 @@ using AuthReally;
 using System.Security.Authentication;
 using System.Net.Security;
 
-const string serverAddress = "https://localhost:4433";
+string serverAddress = "https://localhost:" + args[0];
 const string clientCertPath = @"certs\authreally.client.pfx";
 
 using var channel = CreateSecureChannel();
@@ -19,9 +19,9 @@ Console.WriteLine("Greeting: " + reply.Message);
 GrpcChannel CreateSecureChannel()
 {
     var handler = new HttpClientHandler();
-    handler.ClientCertificates.Add(new X509Certificate2(clientCertPath));
+    handler.ClientCertificates.Add(new X509Certificate2(clientCertPath, "pfx_password"));
     handler.ServerCertificateCustomValidationCallback = CheckServerCert;
-    handler.SslProtocols = SslProtocols.Tls13;
+    handler.SslProtocols = SslProtocols.Tls12;
 
     return GrpcChannel.ForAddress(serverAddress, new GrpcChannelOptions { HttpHandler = handler });
 }
@@ -29,9 +29,8 @@ GrpcChannel CreateSecureChannel()
 bool CheckServerCert(HttpRequestMessage request, X509Certificate2? cert, X509Chain? chain, SslPolicyErrors errors)
 {
     Console.WriteLine("Client checking server cert");
-    Console.WriteLine($"Name = {cert.FriendlyName}");
-    Console.WriteLine($"Subject = {cert.SubjectName}");
-    Console.WriteLine($"Issuer = {cert.IssuerName}");
+    Console.WriteLine($"Subject = {cert.SubjectName.Name}");
+    Console.WriteLine($"Issuer = {cert.IssuerName.Name}");
     Console.WriteLine($"From = {cert.NotBefore}");
     Console.WriteLine($"To = {cert.NotAfter}");
     Console.WriteLine($"Serial = {cert.SerialNumber}");

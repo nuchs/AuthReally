@@ -29,7 +29,7 @@ builder.Services.Configure<KestrelServerOptions>(opt =>
         listenOpts.Protocols = HttpProtocols.Http2;
         listenOpts.UseHttps("certs/authreally.localhost.pfx", "pfx_password", httpsOpt =>
         {
-            httpsOpt.SslProtocols = SslProtocols.Tls13;
+            httpsOpt.SslProtocols = SslProtocols.Tls12;
             httpsOpt.ClientCertificateMode = ClientCertificateMode.RequireCertificate;
             httpsOpt.ClientCertificateValidation = CheckClientCert;
         });
@@ -58,9 +58,8 @@ ILogger<Program> CreateStartupLogger()
 bool CheckClientCert(X509Certificate2 cert, X509Chain? chain, SslPolicyErrors errors)
 {
     log.LogInformation("Kestral checking client cert");
-    log.LogInformation($"Name = {cert.FriendlyName}");
-    log.LogInformation($"Subject = {cert.SubjectName}");
-    log.LogInformation($"Issuer = {cert.IssuerName}");
+    log.LogInformation($"Subject = {cert.SubjectName.Name}");
+    log.LogInformation($"Issuer = {cert.IssuerName.Name}");
     log.LogInformation($"From = {cert.NotBefore}");
     log.LogInformation($"To = {cert.NotAfter}");
     log.LogInformation($"Serial = {cert.SerialNumber}");
