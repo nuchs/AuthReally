@@ -12,9 +12,14 @@ public class GreeterService : Greeter.GreeterBase
 
     public override Task<HelloReply> SayHello(HelloRequest request, ServerCallContext context)
     {
+        var id = WhoAmI(context);
+
         return Task.FromResult(new HelloReply
         {
-            Message = "Hello " + request.Name
+            Message = "Hello " + request.Name + ", or should I say - " + id
         });
     }
+
+    private string WhoAmI(ServerCallContext context)
+          => context.AuthContext.PeerIdentity.FirstOrDefault()?.Name ?? "No-one";
 }
