@@ -6,6 +6,10 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Protos\middle.proto" />
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Google.ProtoBuf" Version="3.19.4" />
     <PackageReference Include="Grpc.Net.Client" Version="2.43.0" />
@@ -16,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Protobuf Include="Protos\greet.proto" GrpcServices="Client" />
+    <Protobuf Include="Protos\middle.proto" GrpcServices="Client" />
   </ItemGroup>
 
   <ItemGroup>

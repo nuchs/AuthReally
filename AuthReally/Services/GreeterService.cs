@@ -1,4 +1,4 @@
-using AuthReally;
+using AuthReally.Grpc;
 using Grpc.Core;
 
 namespace AuthReally.Services;

@@ -1,0 +1,33 @@
+version: "3.9"
+services:
+
+  authreally:
+    build:
+      context: ./AuthReally
+    ports:
+      - "4433:443"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "10"
+        tag: "{{.ImageName}}/{{.Name}}/{{.ID}}"
+
+  middling:
+    build:
+      context: ./Middling
+    depends_on:
+      - authreally
+    ports:
+      - "4434:443"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "10"
+        tag: "{{.ImageName}}/{{.Name}}/{{.ID}}"
+
+networks:
+  default:
+    name: isnaegrate
+    external: true

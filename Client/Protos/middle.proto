@@ -1,19 +1,19 @@
 syntax = "proto3";
 
-package AuthReally.Grpc;
+package Middle.Grpc;
 
 // The greeting service definition.
-service Greeter {
+service Middler {
   // Sends a greeting
-  rpc SayHello (HelloRequest) returns (HelloReply);
+  rpc SayHello (MiddleRequest) returns (MiddleReply);
 }
 
 // The request message containing the user's name.
-message HelloRequest {
+message MiddleRequest {
   string name = 1;
 }
 
 // The response message containing the greetings.
-message HelloReply {
+message MiddleReply {
   string message = 1;
 }

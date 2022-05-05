@@ -1,8 +1,6 @@
 syntax = "proto3";
 
-option csharp_namespace = "AuthReally";
-
-package greet;
+package AuthReally.Grpc;
 
 // The greeting service definition.
 service Greeter {
