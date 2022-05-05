@@ -19,4 +19,6 @@ FROM base AS final
 WORKDIR /app
 COPY --from=build /app/publish .
 ARG SERVICE_NAME
-ENTRYPOINT ["dotnet", "$SERVICE_NAME.dll"]
+# values passed in via ARG are not available to ENTRYPOINT, but ENV values are if you run the shell form of the command
+ENV SERVICE_NAME="$SERVICE_NAME.dll"
+ENTRYPOINT dotnet $SERVICE_NAME
