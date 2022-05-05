@@ -35,7 +35,7 @@ public static class Mtls
                 {
                     httpsOpt.SslProtocols = SslProtocols.Tls12;
                     httpsOpt.ClientCertificateMode = ClientCertificateMode.RequireCertificate;
-                    httpsOpt.ClientCertificateValidation = MakeCertificateValidator(log);
+                    httpsOpt.ClientCertificateValidation = MakeClientCertificateValidator(log);
                 });
             });
         });
@@ -43,10 +43,55 @@ public static class Mtls
         return target;
     }
 
-    private static Func<X509Certificate2, X509Chain?, SslPolicyErrors, bool> MakeCertificateValidator(ILogger? log)
+    public static IServiceCollection AddMtlsGrpcClient<T>(this IServiceCollection target, string connectionString, string clientCert, string certPassword, ILogger? log = null)
+        where T: class
+    {
+        target.AddGrpcClient<T>("AuthReally", o =>
+        {
+            log?.LogInformation("Creating {} client connecting to {}", typeof(T), connectionString);
+            o.Address = new Uri(connectionString);
+        })
+        .ConfigurePrimaryHttpMessageHandler(() =>
+        {
+            var handler = new HttpClientHandler();
+            handler.ClientCertificates.Add(new X509Certificate2(clientCert, certPassword));
+            handler.ServerCertificateCustomValidationCallback = MakeServerCertificateValidator(log);
+            handler.SslProtocols = SslProtocols.Tls12;
+            return handler;
+        });
+
+        return target;
+    }
+
+    private static Func<HttpRequestMessage, X509Certificate?, X509Chain?, SslPolicyErrors, bool> MakeServerCertificateValidator(ILogger? log)
+    {
+        return (request, cert, chain, errors) =>
+        {
+            if (cert == null)
+            {
+                log?.LogWarning("Server did not provide certificate when connecting to {}", request.RequestUri);
+
+                return false;
+            }
+
+            log?.LogInformation("Client checking server cert for {}", cert.Subject);
+
+            if (errors != SslPolicyErrors.None)
+            {
+                log?.LogError("Client is rejecting connection to {} : {}", cert.Subject, errors);
+                return false;
+            }
+
+            return true;
+        };
+    }
+
+    private static Func<X509Certificate2, X509Chain?, SslPolicyErrors, bool> MakeClientCertificateValidator(ILogger? log)
     {
         return (cert, chain, errors) =>
         {
+            log?.LogInformation("Kestral checking client cert for {}", cert.SubjectName.Name);
+
             if (errors != SslPolicyErrors.None)
             {
                 log?.LogError("Kestral is rejecting connection from {} : {}", cert.SubjectName.Name, errors);

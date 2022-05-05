@@ -25,9 +25,12 @@
      <None Update="certs\ca-chain.crt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="certs\middling.localhost.pfx">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+     <None Update="certs\middling.client.pfx">
+       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+     </None>
+     <None Update="certs\middling.server.pfx">
+       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+     </None>
   </ItemGroup>
 
 </Project>

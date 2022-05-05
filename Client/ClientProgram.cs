@@ -3,20 +3,32 @@ using System.Security.Cryptography.X509Certificates;
 using System.Security.Authentication;
 using System.Net.Security;
 using Middle.Grpc;
+using AuthReally.Grpc;
 
 using static Middle.Grpc.Middler;
+using static AuthReally.Grpc.Greeter;
 
 string serverAddress = "https://localhost:" + args[0];
 const string clientCertPath = @"certs\authreally.client.pfx";
 
 using var channel = CreateSecureChannel();
 
-var client = new MiddlerClient(channel);
 
 Console.WriteLine("Submitting request");
-var reply = await client.SayHelloAsync(new MiddleRequest { Name = "TheClient" });
+if (args[0] == "4433")
+{
+    var client = new GreeterClient(channel);
+    var reply = await client.SayHelloAsync(new HelloRequest { Name = "TheClient" });
 
-Console.WriteLine("Greeting: " + reply.Message);
+    Console.WriteLine("Greeting: " + reply.Message);
+}
+else
+{
+    var client = new MiddlerClient(channel);
+    var reply = await client.SayHelloAsync(new MiddleRequest { Name = "TheClient" });
+
+    Console.WriteLine("Middling: " + reply.Message);
+}
 
 GrpcChannel CreateSecureChannel()
 {

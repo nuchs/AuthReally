@@ -47,6 +47,8 @@ public static class Mtls
     {
         return (cert, chain, errors) =>
         {
+            log?.LogInformation("Kestral checking cert for {}", cert.SubjectName.Name);
+
             if (errors != SslPolicyErrors.None)
             {
                 log?.LogError("Kestral is rejecting connection from {} : {}", cert.SubjectName.Name, errors);
