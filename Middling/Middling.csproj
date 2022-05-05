@@ -21,16 +21,4 @@
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Certificate" Version="6.0.2" />
   </ItemGroup>
 
-  <ItemGroup>
-     <None Update="certs\ca-chain.crt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-     <None Update="certs\middling.client.pfx">
-       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-     </None>
-     <None Update="certs\middling.server.pfx">
-       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-     </None>
-  </ItemGroup>
-
 </Project>

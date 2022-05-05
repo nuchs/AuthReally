@@ -6,6 +6,8 @@ services:
       context: ./AuthReally
     ports:
       - "4433:443"
+    volumes:
+      - authreallyCerts:/app/certs
     logging:
       driver: "json-file"
       options:
@@ -20,6 +22,8 @@ services:
       - authreally
     ports:
       - "4434:443"
+    volumes:
+      - middlingCerts:/app/certs
     logging:
       driver: "json-file"
       options:
@@ -31,3 +35,9 @@ networks:
   default:
     name: isnaegrate
     external: true
+
+volumes:
+    authreallyCerts:
+        external: true
+    middlingCerts:
+        external: true
