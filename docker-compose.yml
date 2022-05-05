@@ -20,6 +20,7 @@ services:
       context: ./Middling
       args:
         SERVICE_NAME: "Middling"
+        USERNAME: "arthur"
     depends_on:
       - authreally
     ports:
