@@ -27,17 +27,18 @@ services:
       - "4434:443"
     volumes:
       - middlingCerts:/app/certs
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
+          pids: 1
     logging:
       driver: "json-file"
       options:
         max-size: "10m"
         max-file: "10"
         tag: "{{.ImageName}}/{{.Name}}/{{.ID}}"
-
-networks:
-  default:
-    name: isnaegrate
-    external: true
 
 volumes:
     authreallyCerts:
